@@ -36,8 +36,18 @@ async function run() {
     // course api ================
 
     // all course 
+    // app.get('/course',async(req,res)=>{
+    //     const cursor = learningCOllection.find();
+    //     const result = await cursor.toArray()
+    //     res.send(result)
+    // })
     app.get('/course',async(req,res)=>{
-        const cursor = learningCOllection.find();
+        const category = req.query.category
+        const query ={}
+        if(category){
+            query.category=category
+        }
+        const cursor = learningCOllection.find(query);
         const result = await cursor.toArray()
         res.send(result)
     })
@@ -49,12 +59,6 @@ async function run() {
         res.send(result)
     })
 
-    //category filter 
-    // app.get("/courses/:category", async (req, res) => {
-    //   const { category } = req.params;
-    //   const courses = await coursesCollection.find({ category }).toArray();
-    //   res.json(courses);
-    // });
 
 
     //   details each course
@@ -62,6 +66,16 @@ async function run() {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
         const result = await learningCOllection.findOne(query)
+        res.send(result)
+    })
+
+
+
+    // add course 
+
+    app.post('/course',async(req,res)=>{
+        const newCourse = req.body;
+        const result = await learningCOllection.insertOne(newCourse)
         res.send(result)
     })
 
