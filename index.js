@@ -1,6 +1,6 @@
  const express = require('express')
  const cors = require('cors');
- const { MongoClient, ServerApiVersion } = require('mongodb');
+ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
  require('dotenv').config()
  const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wbmojlp.mongodb.net/?appName=Cluster0`;
  const app = express()
@@ -33,15 +33,35 @@ async function run() {
 
 
 
-    // course api 
+    // course api ================
+
+    // all course 
     app.get('/course',async(req,res)=>{
         const cursor = learningCOllection.find();
         const result = await cursor.toArray()
         res.send(result)
     })
+
+      //features course
     app.get('/featuresCourse',async(req,res)=>{
         const cursor = learningCOllection.find({ isFeatured: true }).limit(6);
         const result = await cursor.toArray()
+        res.send(result)
+    })
+
+    //category filter 
+    // app.get("/courses/:category", async (req, res) => {
+    //   const { category } = req.params;
+    //   const courses = await coursesCollection.find({ category }).toArray();
+    //   res.json(courses);
+    // });
+
+
+    //   details each course
+    app.get('/course/:id',async(req,res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await learningCOllection.findOne(query)
         res.send(result)
     })
 
