@@ -26,9 +26,9 @@ async function run() {
   try {
     await client.connect();
 
-      const db = client.db('learningDB');
-    const learningCOllection = db.collection('courses');
-
+      const db = client.db('learningDB');    
+      const learningCOllection = db.collection('courses');
+      const enrollCOllection = db.collection('enrolls');
 
 
 
@@ -36,21 +36,22 @@ async function run() {
     // course api ================
 
     // all course 
-    // app.get('/course',async(req,res)=>{
-    //     const cursor = learningCOllection.find();
-    //     const result = await cursor.toArray()
-    //     res.send(result)
-    // })
+
     app.get('/course',async(req,res)=>{
         const category = req.query.category
+        const email = req.query.email
         const query ={}
         if(category){
             query.category=category
+        }
+        if(email){
+          query.created_by = email
         }
         const cursor = learningCOllection.find(query);
         const result = await cursor.toArray()
         res.send(result)
     })
+
 
       //features course
     app.get('/featuresCourse',async(req,res)=>{
@@ -78,6 +79,40 @@ async function run() {
         const result = await learningCOllection.insertOne(newCourse)
         res.send(result)
     })
+
+
+    app.patch('/course/:id',async(req,res)=>{
+      const id = req.params.id
+      const updateCourse = req.body
+      const query = {_id: new ObjectId(id)}
+      const update ={
+        $set: updateCourse
+           
+      }
+      const result = await learningCOllection.updateOne(query,update)
+      res.send(result)
+      
+    })
+
+    // eneoll api 
+    app.post('/enrolled',async(req,res)=>{
+             const data = req.body;
+             const result = await enrollCOllection.insertOne(data)
+             res.send(result)
+    })
+
+   app.get('/enrolled',async(req,res)=>{
+    
+        const email = req.query.email
+        const query ={}
+       
+        if(email){
+          query.enrolled_by = email
+        }
+        const cursor = enrollCOllection.find(query);
+        const result = await cursor.toArray()
+        res.send(result)
+   })
 
     
     await client.db("admin").command({ ping: 1 });
