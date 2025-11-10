@@ -94,6 +94,14 @@ async function run() {
       
     })
 
+    app.delete('/course/:id',async(req,res)=>{
+      // console.log('delete a user from database')
+       const id = req.params.id;
+       const query = {_id: new ObjectId(id)}
+       const result = await learningCOllection.deleteOne(query)
+       res.send(result)
+    })
+
     // eneoll api 
     app.post('/enrolled',async(req,res)=>{
              const data = req.body;
