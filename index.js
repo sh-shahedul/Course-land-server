@@ -47,7 +47,7 @@ async function run() {
         if(email){
           query.created_by = email
         }
-        const cursor = learningCOllection.find(query);
+        const cursor = learningCOllection.find(query).sort({created_at:'desc'});
         const result = await cursor.toArray()
         res.send(result)
     })
@@ -55,7 +55,7 @@ async function run() {
 
       //features course
     app.get('/featuresCourse',async(req,res)=>{
-        const cursor = learningCOllection.find({ isFeatured: true }).limit(6);
+        const cursor = learningCOllection.find({ isFeatured: true }).sort({created_at:'desc'}).limit(6);
         const result = await cursor.toArray()
         res.send(result)
     })
