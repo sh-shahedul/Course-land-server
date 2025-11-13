@@ -9,9 +9,6 @@
 // middleWare 
 app.use(cors())
 app.use(express.json())
-//CqRB8GGgLxRBj8EW    learningDB
-
-
 
 const client = new MongoClient(uri, {
   serverApi: {
