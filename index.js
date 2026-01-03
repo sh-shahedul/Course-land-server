@@ -32,32 +32,10 @@ async function run() {
 
     // course api ================
 
-   //  user API
-  //   app.post('/users',async(req,res)=>{
-  //      const user = req.body;
-  //       const newUser = {
-  //           name: user.name,
-  //           email: user.email,
-  //           photo: user.photo,
-  //           role: 'student',        
-  //           createdAt: new Date()  
-  // };
-  //       const result = await userCollection.insertOne(newUser)
-  //       res.send(result)
-  //   })
-//   app.post("/users", async (req, res) => {
-//   const user = req.body;
+   //  user related API
 
-//   const newUser = {
-//     ...user,
-//     role: "student", 
-//     createdAt: new Date(),
-//   };
-
-//   const result = await userCollection.insertOne(newUser);
-//   res.send(result);
-// });
-app.post("/users", async (req, res) => {
+   // Add user
+    app.post("/users", async (req, res) => {
   const user = req.body;
   const query = { email: user.email };
 
@@ -85,6 +63,26 @@ app.post("/users", async (req, res) => {
     res.status(500).send({ message: "Error saving user", error: error.message });
   }
 });
+
+  //  get user 
+      app.get('/users',async(req,res)=>{
+      const cursor = userCollection.find()
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    //querey email
+    app.get("/users/email", async (req, res) => {
+      const email = req.query.email;
+      const query = {};
+      if (email) {
+        query.email = email;
+      }
+      const cursor = userCollection.findOne(query);
+      const result = await cursor;
+      
+      res.send(result);
+    });
+
 
     // all course 
 
