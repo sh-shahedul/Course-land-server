@@ -83,14 +83,26 @@ async function run() {
       res.send(result);
     });
    /* ================= PATCH USER ROLE ================= */
+// app.patch("/users/:email", async (req, res) => {
+//   const email = req.params.email;
+//   const { role } = req.body;
+//   if (!role) return res.status(400).send({ message: "Role required" });
+
+//   const result = await userCollection.updateOne(
+//     { email },
+//     { $set: { role } }
+//   );
+
+//   res.send(result);
+// });
 app.patch("/users/:email", async (req, res) => {
   const email = req.params.email;
-  const { role } = req.body;
-  if (!role) return res.status(400).send({ message: "Role required" });
+  const updateFields = req.body;
 
+  
   const result = await userCollection.updateOne(
     { email },
-    { $set: { role } }
+    { $set: updateFields }
   );
 
   res.send(result);
