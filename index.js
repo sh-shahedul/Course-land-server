@@ -26,11 +26,65 @@ async function run() {
       const db = client.db('learningDB');    
       const learningCOllection = db.collection('courses');
       const enrollCOllection = db.collection('enrolls');
-
+      const userCollection = db.collection('users')
 
 
 
     // course api ================
+
+   //  user API
+  //   app.post('/users',async(req,res)=>{
+  //      const user = req.body;
+  //       const newUser = {
+  //           name: user.name,
+  //           email: user.email,
+  //           photo: user.photo,
+  //           role: 'student',        
+  //           createdAt: new Date()  
+  // };
+  //       const result = await userCollection.insertOne(newUser)
+  //       res.send(result)
+  //   })
+//   app.post("/users", async (req, res) => {
+//   const user = req.body;
+
+//   const newUser = {
+//     ...user,
+//     role: "student", 
+//     createdAt: new Date(),
+//   };
+
+//   const result = await userCollection.insertOne(newUser);
+//   res.send(result);
+// });
+app.post("/users", async (req, res) => {
+  const user = req.body;
+  const query = { email: user.email };
+
+  try {
+    // Check if user already exists
+    const existingUser = await userCollection.findOne(query);
+    
+    if (existingUser) {
+      // User already exists, just return success
+      return res.send({ message: "User already exists", insertedId: existingUser._id });
+    }
+    // Create new user
+    const newUser = {
+      name: user.name,
+      email: user.email,
+      photo: user.photo,
+      role: "student", 
+      createdAt: new Date(),
+    };
+
+    const result = await userCollection.insertOne(newUser);
+    res.send(result);
+  } catch (error) {
+    console.error("Error saving user:", error);
+    res.status(500).send({ message: "Error saving user", error: error.message });
+  }
+});
 
     // all course 
 
